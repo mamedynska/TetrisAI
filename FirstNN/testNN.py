@@ -75,8 +75,26 @@ for epoch in range(EPOCHS): # 3 full passes over the data
     for data in trainset:  # `data` is a batch of data
          X, y = data  # X sont les données d'une image 28*28, y est le label càd le chiffre que représente l'image
          net.zero_grad()    # On reset pour chaque data
-         output = net(X.view(-1,28*28))  # On fait passer notre data dans le NN
+         output = net(X.view(-1,28*28))  # On fait passer notre data dans le NN (-1 pour faire ligne --> colonne)
          loss = F.nll_loss(output, y)   # On calcul la perte avec l'output qu'on a eu et y le résultat voulu
          loss.backward()                # Calcul tous seul le gradient (merci Pytorch)     
          optimizer.step()               # Lance une étape d'optimisatin
     print(loss)
+
+
+# On va voir à quel point on est correcte : 
+correct = 0
+total = 0
+
+with torch.no_grad():       # On ne veut pas des gradient ici on va juste regarder si on a bon ou pas sur la valeur avec le plus de proba
+    for data in testset:
+        X, y = data
+        output = net(X.view(-1,784))
+        #print(output)
+        for idx, i in enumerate(output):
+            #print(torch.argmax(i), y[idx])
+            if torch.argmax(i) == y[idx]:
+                correct += 1
+            total += 1
+
+print("Accuracy: ", round(correct/total, 3))    # On arrondi la précision
