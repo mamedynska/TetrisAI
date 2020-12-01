@@ -1,6 +1,7 @@
 from block import Block
 from grid import Grid
 from tetrisBlock import TetrisBlock
+import tetris_ai
 
 import pygame
 
@@ -83,6 +84,7 @@ class Tetris:
 
 
     def keyPressed(self):
+        # for event in list(pygame.event.get()) + tetris_ai.run_ai():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.board.isGameOver = True
