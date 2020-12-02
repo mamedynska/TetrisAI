@@ -81,7 +81,61 @@ class Tetris:
         pygame.quit()
 
 
+#TODO :  
+#   - get_holes(self, board) : return nb_holes
+#   - get_bumpiness_and_height : return total_bumpiness, total_height
+#   - 
+#
+#
+    def get_states(self, board):
+        lines_cleared, board = self.check_cleared_rows(board)
+        holes = self.get_holes(board)
+        bumpiness, height = self.get_bumpiness_and_height(board)
+        return torch.FloatTensor([lines_cleared, holes, bumpiness, height])
 
+    #TODO
+    def check_cleared_rows(board):
+        pass
+        # to_delete = []
+        # for i, row in enumerate(board[::-1]):
+        #     if 0 not in row:
+        #         to_delete.append(len(board) - 1 - i)
+
+        #On ne veut pas la supprimer donc on retourne juste le nombre de block à supprimer dans notre algo
+        ## if len(to_delete) > 0:
+        ##     board = self.remove_row(board, to_delete)
+        # return len(to_delete), board
+
+    #TODO
+    def get_holes(board):
+        pass
+        #   num_holes = 0
+        #     for col in zip(*board):
+        #         row = 0
+        #         while row < self.height and col[row] == 0:
+        #             row += 1
+        #         num_holes += len([x for x in col[row + 1:] if x == 0])
+        #     return num_holes
+
+    #TODO
+    def get_bumpiness_and_height(board):
+        pass
+        # board = np.array(board)
+        # mask = board != 0
+        # invert_heights = np.where(mask.any(axis=0), np.argmax(mask, axis=0), self.height)
+        # heights = self.height - invert_heights
+        # total_height = np.sum(heights)
+        # currs = heights[:-1]
+        # nexts = heights[1:]
+        # diffs = np.abs(currs - nexts)
+        # total_bumpiness = np.sum(diffs)
+        # return total_bumpiness, total_height
+
+
+    #TODO méthode qui reset le plateau du tetris
+    def reset():
+
+        return self.get_states(self, board)
 
     def keyPressed(self):
         # for event in list(pygame.event.get()) + tetris_ai.run_ai():

@@ -81,6 +81,9 @@ for epoch in range(EPOCHS): # 3 full passes over the data
          optimizer.step()               # Lance une étape d'optimisatin
     print(loss)
 
+torch.save(net, "NN/")
+
+net = torch.load("NN/")
 
 # On va voir à quel point on est correcte : 
 correct = 0
