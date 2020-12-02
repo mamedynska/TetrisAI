@@ -94,8 +94,7 @@ class Tetris:
         return torch.FloatTensor([lines_cleared, holes, bumpiness, height])
 
     #TODO
-    def check_cleared_rows(board):
-        pass
+    def check_cleared_rows(self, board):
         # to_delete = []
         # for i, row in enumerate(board[::-1]):
         #     if 0 not in row:
@@ -106,9 +105,12 @@ class Tetris:
         ##     board = self.remove_row(board, to_delete)
         # return len(to_delete), board
 
+        ########################
+        #Il faut qu'on puisse l'appeler avant de clear le board
+        return board.linesToClear(), board
+
     #TODO
-    def get_holes(board):
-        pass
+    def get_holes(self, board):
         #   num_holes = 0
         #     for col in zip(*board):
         #         row = 0
@@ -117,8 +119,62 @@ class Tetris:
         #         num_holes += len([x for x in col[row + 1:] if x == 0])
         #     return num_holes
 
+        ########################
+
+        #Soit on a : (1er cas)
+        #   X    X    X
+        #      trou
+        #ou (2eme cas)
+        #        X
+        #   X  trou   X
+
+        holes = 0
+        #boucles de parcours x en y
+        for i in range(self.board.maxY):
+            for j in range(self.board.maxX):
+
+                    #On repère là où il y a un bloc
+                    #(plus opti que de vérifier là où il n'y a pas de bloc)
+                    #Et si le bloc n'est pas posé tout en bas (i < maxY)
+                    #==> Je cherche à verifier si ce bloc GENE un potentiel trou!
+                    if self.board.coordArray[i][j] > 0 and i < self.board.maxY:
+                        yToCheck = i + 1
+
+                        #On regarde si le bloc d'en dessous est vide
+                        if (self.board.coordArray[yToCheck][j] == 0):
+                            #On vérifie si ce vide est un trou
+                            
+                            #On regarde s'il faut vérifier les 2 autres emplacements
+                            if j > 0 and j < self.board.maxX:
+                                #2eme cas
+                                if (self.board.coordArray[yToCheck][j + 1] > 0) and (self.board.coordArray[yToCheck][j - 1] > 0):
+                                    holes += 1
+                                #1er cas
+                                elif (self.board.coordArray[i][j + 1] > 0) and (self.board.coordArray[i][j - 1] > 0):
+                                    holes +=1
+
+                            #OU un seul, selon si le vide est situé en bord de plateau
+                            elif:
+                                if j == 0:
+                                    #2eme cas
+                                    if (self.board.coordArray[yToCheck][j + 1] > 0):
+                                        holes += 1
+                                    #1er cas
+                                    elif if (self.board.coordArray[i][j + 1] > 0):
+                                        holes +=1
+
+                                elif j == self.board.maxX:
+                                    #2eme cas
+                                    if (self.board.coordArray[yToCheck][j - 1] > 0):
+                                        holes += 1
+                                    #1er cas
+                                    elif if (self.board.coordArray[i][j - 1] > 0):
+                                        holes +=1
+
+
+
     #TODO
-    def get_bumpiness_and_height(board):
+    def get_bumpiness_and_height(self, board):
         pass
         # board = np.array(board)
         # mask = board != 0
@@ -133,9 +189,17 @@ class Tetris:
 
 
     #TODO méthode qui reset le plateau du tetris
-    def reset():
+    def reset(self):
+        return self.get_states(self, self.board)
 
-        return self.get_states(self, board)
+        ########################
+        for i in range(self.board.maxY):
+            for j in range(self.board.maxX):
+                self.board.coordArray[i][j] = 0
+        #Grâce à ce parcours, le plateau ne contient plus aucun bloc 
+        #sauvegardé
+        
+        
 
     def keyPressed(self):
         # for event in list(pygame.event.get()) + tetris_ai.run_ai():
