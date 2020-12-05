@@ -154,13 +154,13 @@ class Tetris:
                                     holes +=1
 
                             #OU un seul, selon si le vide est situé en bord de plateau
-                            elif:
+                            else:
                                 if j == 0:
                                     #2eme cas
                                     if (self.board.coordArray[yToCheck][j + 1] > 0):
                                         holes += 1
                                     #1er cas
-                                    elif if (self.board.coordArray[i][j + 1] > 0):
+                                    elif (self.board.coordArray[i][j + 1] > 0):
                                         holes +=1
 
                                 elif j == self.board.maxX:
@@ -168,14 +168,33 @@ class Tetris:
                                     if (self.board.coordArray[yToCheck][j - 1] > 0):
                                         holes += 1
                                     #1er cas
-                                    elif if (self.board.coordArray[i][j - 1] > 0):
+                                    elif(self.board.coordArray[i][j - 1] > 0):
                                         holes +=1
+
+        return holes
 
 
 
     #TODO
     def get_bumpiness_and_height(self, board):
-        pass
+         # height : '''Sum and maximum height of the board'''
+        totalHeight = 0
+        totalBumpiness = 0
+        heights = []
+        for x in range(self.board.maxX):
+            y = 0
+            while self.board.coordArray[y][x] == 0 and y < self.board.maxY:
+                y += 1
+            heights.append(y)
+            totalHeight += self.board.maxY - y
+
+        # bumpiness : '''Sum of the differences of heights between pair of columns'''
+        for i in range(len(heights) - 1):
+            totalBumpiness += abs(heights[i] - heights[i + 1])
+
+        return totalBumpiness, totalHeight
+
+        
         # board = np.array(board)
         # mask = board != 0
         # invert_heights = np.where(mask.any(axis=0), np.argmax(mask, axis=0), self.height)
@@ -191,6 +210,7 @@ class Tetris:
     #TODO méthode qui reset le plateau du tetris
     def reset(self):
         # return self.get_states(self, self.board)
+        return self.get_states(self.board)
 
         ########################
         for i in range(self.board.maxY):
