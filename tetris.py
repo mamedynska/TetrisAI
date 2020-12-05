@@ -190,7 +190,7 @@ class Tetris:
 
     #TODO méthode qui reset le plateau du tetris
     def reset(self):
-        return self.get_states(self, self.board)
+        # return self.get_states(self, self.board)
 
         ########################
         for i in range(self.board.maxY):
