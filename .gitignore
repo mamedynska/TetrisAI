@@ -129,7 +129,12 @@ dmypy.json
 .pyre/
 
 
+.vscode
+
 # Word
+#Les fichiers temporaires de Word
+~$*.docx
+*.tmp
 
 # *.docx
 
