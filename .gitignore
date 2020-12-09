@@ -144,3 +144,5 @@ MNIST/
 
 # Jupiter Notebook
 .ipynb_checkpoints/
+
+tensorboard/

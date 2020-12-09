@@ -5,12 +5,15 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 from torchvision.utils import save_image
+from tensorboardX import SummaryWriter
 import argparse
 import os
 import shutil
 import tetris
 import numpy as np
 from random import random, randint, sample
+from tetris import Tetris
+from collections import deque
 
 
 class DeepQNetwork(nn.Module):
@@ -77,7 +80,7 @@ def train(opt):
     os.makedirs(opt.log_path)
     writer = SummaryWriter(opt.log_path)
     env = Tetris()          # Notre jeu tetris, ici c'est l'environnement de l'IA d'où "env"
-    net = DeepQNetwork()    # Notre réseau de neuronnes
+    model = DeepQNetwork()    # Notre réseau de neuronnes
     optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr)     # Notre optimizer
     criterion = nn.MSELoss()        # Fonction de perte MeanSquar : va pénaliser le model pour de trop grande erreurs et encourage le model quand il en fait de petite
 
@@ -100,7 +103,7 @@ def train(opt):
     # Tant qu'on a pas fait toutes les générations
     while epoch < opt.num_epochs :
         # Récupére tous les états possibles à un instant t (avec la pièce disponible)
-        # next_steps = env.get_next_states()
+        next_steps = env.get_states()
 
         # Epsilon permet de soit faire une action random, soit une action choisie
         epsilon = opt.final_epsilon + (max(opt.num_decay_epochs - epoch, 0) * (
@@ -189,7 +192,7 @@ def train(opt):
             reward_batch = reward_batch.cuda()
             next_state_batch = next_state_batch.cuda()
 
-        
+
         q_values = model(state_batch)
         model.eval()
         with torch.no_grad():
@@ -225,11 +228,15 @@ def train(opt):
 
 
 
-opt = get_args()
-epoch = 0
+# opt = get_args()
+# epoch = 0
 
-epsilon = opt.final_epsilon + (max(opt.num_decay_epochs - epoch, 0) * (
-                    opt.initial_epsilon - opt.final_epsilon) / opt.num_decay_epochs)
-u = random()
-random_action = u <= epsilon
-print(random_action)
+# epsilon = opt.final_epsilon + (max(opt.num_decay_epochs - epoch, 0) * (
+#                     opt.initial_epsilon - opt.final_epsilon) / opt.num_decay_epochs)
+# u = random()
+# random_action = u <= epsilon
+# print(random_action)
+
+if __name__ == "__main__":
+    opt = get_args()
+    train(opt)
