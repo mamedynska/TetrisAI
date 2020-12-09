@@ -103,7 +103,8 @@ def train(opt):
     # Tant qu'on a pas fait toutes les générations
     while epoch < opt.num_epochs :
         # Récupére tous les états possibles à un instant t (avec la pièce disponible)
-        next_steps = env.get_states()
+        next_steps = env.get_next_states()
+
 
         # Epsilon permet de soit faire une action random, soit une action choisie
         epsilon = opt.final_epsilon + (max(opt.num_decay_epochs - epoch, 0) * (
@@ -147,7 +148,7 @@ def train(opt):
 
         # On récupére depuis l'environnement la récompense après notre coup joué càd le score
         # Done est un booléen qui est à True si on a un gameover et False sinon
-        reward, done = env.step(action, render=True)
+        reward, done = env.step(action)
 
         # GPU
         if torch.cuda.is_available():

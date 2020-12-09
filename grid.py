@@ -22,7 +22,7 @@ class Grid:
                 newLine.append(0)
             self.coordArray.append(newLine)
 
-        self.newBlock = None
+        self.spawnNewBlock()
 
         self.score = 0
         self.isGameOver = False

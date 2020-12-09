@@ -13,10 +13,9 @@ class Tetris:
 
     def __init__(self):
         self.board = Grid(10,15)
+        pygame.init()
 
     def displayGame(self):
-
-        pygame.init()
 
         frameRate = 25
         coordSize = 20
@@ -68,7 +67,6 @@ class Tetris:
                                             y + coordSize * (i + self.board.newBlock.coordinates.y) + 1,
                                             coordSize - 2, coordSize - 2])
 
-
             font = pygame.font.SysFont('Calibri', 25, True, False)
             text = font.render("Score: " + str(self.board.score), True, (0,0,0))
             gameWindow.blit(text, [0, 0])
@@ -83,7 +81,7 @@ class Tetris:
 #   - get_bumpiness_and_height : return total_bumpiness, total_height
 #   - 
 #
-#
+#   get_states_properties
     def get_states(self):
         lines_cleared = self.check_cleared_rows()
         holes = self.get_holes()
@@ -125,13 +123,12 @@ class Tetris:
                     #(plus opti que de vérifier là où il n'y a pas de bloc)
                     #Et si le bloc n'est pas posé tout en bas (i < maxY)
                     #==> Je cherche à verifier si ce bloc GENE un potentiel trou!
-                    if self.board.coordArray[i][j] > 0 and i < self.board.maxY:
+                    if self.board.coordArray[i][j] > 0 and i < self.board.maxY - 1:
                         yToCheck = i + 1
 
                         #On regarde si le bloc d'en dessous est vide
                         if (self.board.coordArray[yToCheck][j] == 0):
                             #On vérifie si ce vide est un trou
-                            
                             #On regarde s'il faut vérifier les 2 autres emplacements
                             if j > 0 and j < self.board.maxX:
                                 #2eme cas
@@ -192,6 +189,7 @@ class Tetris:
                     pass
                 states[(self.board.newBlock.coordinates.x, i)] = self.get_states()
             self.board.newBlock.reset()
+            self.board.rotateBlock()
         return states
 
     def reset(self):
@@ -244,4 +242,18 @@ class Tetris:
         else:
             self.board.score -= 2
 
+        self.consoleReader()
+
         return self.board.score, self.board.isGameOver
+
+
+    def consoleReader(self):
+        line = ""
+        for i in range(self.board.maxY):
+            for j in range(self.board.maxX):
+                if self.board.coordArray[i][j] > 0:
+                    line += "X"
+                else:
+                    line += "_"
+            print(line)
+        print("------------------")
