@@ -88,7 +88,10 @@ def train(opt):
         model.cuda()
         state = state.cuda()
 
-    # Nombre de génération entre les périodes de tests
+    # Replay_memory =   la structure de données qui va nous servir de mémoire pour stocker nos ensembles (state, action, new_state, reward). 
+    # C’est grâce à cette mémoire que l’on peut faire de l’experience replay. A chaque action, 
+    # on va remplir cette mémoire au lieu d’entrainer, puis on va régulièrement piocher aléatoirement 
+    # des samples dans cette mémoire, pour lancer l’entrainement sur un batch de données. 
     replay_memory = deque(maxlen=opt.replay_memory_size)
 
     # Génération = 0
@@ -147,7 +150,7 @@ def train(opt):
         if torch.cuda.is_available():
             next_state = next_state.cuda()
         
-        # Ajout d'attribut dans replay_memoruy
+        # Ajout dans la mémoire de notre action (avec le state, reward et done)
         replay_memory.append([state, reward, next_state, done])
 
         # Si gameover on enregistre le score final et on reset le tetris
@@ -170,18 +173,23 @@ def train(opt):
         if len(replay_memory) < opt.replay_memory_size / 10:
             continue
         
+        # TODO : 
         epoch += 1
+        # On pioche aléatoirement dans replay_memory une action/état
         batch = sample(replay_memory, min(len(replay_memory), opt.batch_size))
+        # On récupére chacun des attributs : 
         state_batch, reward_batch, next_state_batch, done_batch = zip(*batch)
         state_batch = torch.stack(tuple(state for state in state_batch))
         reward_batch = torch.from_numpy(np.array(reward_batch, dtype=np.float32)[:, None])
         next_state_batch = torch.stack(tuple(state for state in next_state_batch))
 
+        # GPU
         if torch.cuda.is_available():
             state_batch = state_batch.cuda()
             reward_batch = reward_batch.cuda()
             next_state_batch = next_state_batch.cuda()
 
+        
         q_values = model(state_batch)
         model.eval()
         with torch.no_grad():
