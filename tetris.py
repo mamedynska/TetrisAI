@@ -2,6 +2,7 @@ from block import Block
 from grid import Grid
 from tetrisBlock import TetrisBlock
 import tetris_ai
+import torch
 
 import pygame
 
