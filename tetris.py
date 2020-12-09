@@ -38,17 +38,6 @@ class Tetris:
                 if self.board.checkCollisions():
                     self.board.isGameOver = True
 
-            self.counter += 1
-            if self.counter > 100000:
-                self.counter = 0
-
-            if self.counter % (frameRate // 2) == 0 or self.downButton:
-                if not self.board.isGameOver:
-                    couldFall = self.board.fallBlock()
-                    if not couldFall:
-                        self.board.endOfGrid()
-
-
             gameWindow.fill((255,255,255))
 
             self.keyPressed()
@@ -59,7 +48,6 @@ class Tetris:
                     if self.board.coordArray[i][j] > 0:
                         pygame.draw.rect(gameWindow, self.board.newBlock.color,
                                         [x + coordSize * j + 1, y + coordSize * i + 1, coordSize - 2, coordSize - 1])
-
 
 
             if self.board.newBlock is not None:
@@ -211,6 +199,8 @@ class Tetris:
 
     def keyPressed(self):
         # for event in list(pygame.event.get()) + tetris_ai.run_ai():
+        canFall = None
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.board.isGameOver = True
@@ -219,7 +209,7 @@ class Tetris:
                     self.board.newBlock.rotate()
 
                 if event.key == pygame.K_DOWN:
-                    self.downButton = True
+                    canFall = self.board.fallBlock()
 
                 if event.key == pygame.K_LEFT:
                     self.board.moveBlock("l")
@@ -229,8 +219,6 @@ class Tetris:
 
                 if event.key == pygame.K_SPACE:
                     self.board.fallBlockUntilTheEnd()
-        
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_DOWN:
-                    self.downButton = False
-
+    
+        if canFall is not None and not canFall:
+            self.board.endOfGrid()
