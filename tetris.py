@@ -205,7 +205,7 @@ class Tetris:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.board.isGameOver = True
+                pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     self.board.newBlock.rotate()
