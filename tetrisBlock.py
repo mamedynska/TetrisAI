@@ -33,3 +33,7 @@ class TetrisBlock(Block):
 
     def rotate(self):
         self.rotation = (self.rotation + 1) % len(self.Tetrisblocks[self.shape])
+
+    def reset(self):
+        for _ in range(self.coordinates):
+            self.coordinates.y = 0

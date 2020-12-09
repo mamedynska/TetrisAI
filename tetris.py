@@ -44,7 +44,9 @@ class Tetris:
 
             if self.counter % (frameRate // 2) == 0 or self.downButton:
                 if not self.board.isGameOver:
-                    self.board.fallBlock()
+                    couldFall = self.board.fallBlock()
+                    if not couldFall:
+                        self.board.endOfGrid()
 
 
             gameWindow.fill((255,255,255))
@@ -87,30 +89,18 @@ class Tetris:
 #   - 
 #
 #
-    def get_states(self, board):
-        lines_cleared, board = self.check_cleared_rows(board)
-        holes = self.get_holes(board)
-        bumpiness, height = self.get_bumpiness_and_height(board)
+    def get_states(self):
+        lines_cleared = self.check_cleared_rows()
+        holes = self.get_holes()
+        bumpiness, height = self.get_bumpiness_and_height()
         return torch.FloatTensor([lines_cleared, holes, bumpiness, height])
 
     #TODO
-    def check_cleared_rows(self, board):
-        # to_delete = []
-        # for i, row in enumerate(board[::-1]):
-        #     if 0 not in row:
-        #         to_delete.append(len(board) - 1 - i)
-
-        #On ne veut pas la supprimer donc on retourne juste le nombre de block à supprimer dans notre algo
-        ## if len(to_delete) > 0:
-        ##     board = self.remove_row(board, to_delete)
-        # return len(to_delete), board
-
-        ########################
-        #Il faut qu'on puisse l'appeler avant de clear le board
-        return board.linesToClear(), board
+    def check_cleared_rows(self):
+        return self.board.fullLines
 
     #TODO
-    def get_holes(self, board):
+    def get_holes(self):
         #   num_holes = 0
         #     for col in zip(*board):
         #         row = 0
@@ -176,7 +166,7 @@ class Tetris:
 
 
     #TODO
-    def get_bumpiness_and_height(self, board):
+    def get_bumpiness_and_height(self):
          # height : '''Sum and maximum height of the board'''
         totalHeight = 0
         totalBumpiness = 0
@@ -194,26 +184,21 @@ class Tetris:
 
         return totalBumpiness, totalHeight
 
-#TODO une fonction qui permet de passer une étape du jeu (je ne comprends pas trop cette fonction)
-    # def get_next_states(self):
 
-        
-        # board = np.array(board)
-        # mask = board != 0
-        # invert_heights = np.where(mask.any(axis=0), np.argmax(mask, axis=0), self.height)
-        # heights = self.height - invert_heights
-        # total_height = np.sum(heights)
-        # currs = heights[:-1]
-        # nexts = heights[1:]
-        # diffs = np.abs(currs - nexts)
-        # total_bumpiness = np.sum(diffs)
-        # return total_bumpiness, total_height
-
+    def get_next_states(self):
+        states = {}
+        for i in range(4):
+            for x in range(self.board.maxX):
+                while self.board.fallBlock():
+                    pass
+                states[(self.board.newBlock.coordinates.x, i)] = self.get_states()
+            self.board.newBlock.reset()
+        return states
 
     #TODO méthode qui reset le plateau du tetris
     def reset(self):
         # return self.get_states(self, self.board)
-        return self.get_states(self.board)
+        return self.get_states()
 
         ########################
         for i in range(self.board.maxY):

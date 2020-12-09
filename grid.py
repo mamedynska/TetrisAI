@@ -64,6 +64,7 @@ class Grid:
 
     def endOfGrid(self):
         self.addToGrid()
+        self.fullLines = self.linesToClear()
         self.clearLines()
         self.spawnNewBlock()
         if self.checkCollisions():
@@ -76,7 +77,6 @@ class Grid:
         self.newBlock.coordinates.y += 1
         if self.checkCollisions():
             self.newBlock.coordinates.y = tmpBlockY
-            self.endOfGrid()
             return False
         return True
 
