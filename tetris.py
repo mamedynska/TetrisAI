@@ -9,16 +9,11 @@ import pygame
 class Tetris:
 
     #Grid board = new Grid(10,15);
-    #int score = 0
-    #int counter = 0
 
     def __init__(self):
         self.board = Grid(10,15)
-        self.score = 0
-        self.counter = 0
-        self.downButton = False
 
-    def game(self):
+    def displayGame(self):
 
         pygame.init()
 
@@ -31,6 +26,20 @@ class Tetris:
         gameWindow = pygame.display.set_mode((400,600))
         clock = pygame.time.Clock()
         pygame.display.set_caption("Tetris")
+
+        while True:
+            self.game(gameWindow,clock)
+
+        pygame.quit()
+
+
+
+    def game(self, gameWindow, clock):
+        coordSize = 20
+        frameRate = 25
+
+        x = 100
+        y = 60
 
         while not self.board.isGameOver:
             if self.board.newBlock is None:
@@ -68,8 +77,7 @@ class Tetris:
             pygame.display.flip()
             clock.tick(frameRate)
         
-        pygame.quit()
-
+        self.reset()
 
 #TODO :  
 #   - get_holes(self, board) : return nb_holes
@@ -185,16 +193,8 @@ class Tetris:
 
     #TODO méthode qui reset le plateau du tetris
     def reset(self):
-        # return self.get_states(self, self.board)
+        self.board = Grid(10,15)
         return self.get_states()
-
-        ########################
-        for i in range(self.board.maxY):
-            for j in range(self.board.maxX):
-                self.board.coordArray[i][j] = 0
-        #Grâce à ce parcours, le plateau ne contient plus aucun bloc 
-        #sauvegardé
-        
         
 
     def keyPressed(self):
@@ -243,6 +243,3 @@ class Tetris:
             self.board.score -= 2
 
         return self.board.score, self.board.isGameOver
-
-
-        
