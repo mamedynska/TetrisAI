@@ -91,7 +91,10 @@ class Tetris:
 
     #TODO
     def check_cleared_rows(self):
-        return self.board.fullLines
+        if self.board.fullLines is not None:
+            if self.board.fullLines != self.board.linesToClear():
+                return self.board.fullLines
+        return self.board.linesToClear()
 
     #TODO
     def get_holes(self):

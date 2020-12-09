@@ -13,6 +13,8 @@ class Grid:
         self.maxY = y
         #self.coordArray = [[0]*x for i in range(y)]
 
+        self.fullLines = None
+
         self.coordArray = []
         for i in range(self.maxY):
             newLine = []
