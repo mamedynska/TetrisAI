@@ -111,7 +111,7 @@ def train(opt):
         next_actions, next_states = zip(*next_steps.items())
 
         # concatene tous les états en une ligne
-        next_states = torch.stack(next_states)*
+        next_states = torch.stack(next_states)
 
         # GPU
         if torch.cuda.is_available():
