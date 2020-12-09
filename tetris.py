@@ -32,8 +32,6 @@ class Tetris:
 
         pygame.quit()
 
-
-
     def game(self, gameWindow, clock):
         coordSize = 20
         frameRate = 25

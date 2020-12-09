@@ -64,6 +64,7 @@ class Grid:
 
     def endOfGrid(self):
         self.addToGrid()
+        self.fullLines = self.linesToClear()
         self.clearLines()
         self.spawnNewBlock()
         if self.checkCollisions():
@@ -99,3 +100,14 @@ class Grid:
                         self.coordArray[i1][j] = self.coordArray[i1 - 1][j]
 
         self.score += 1 +  lines ** 2
+
+    def linesToClear(self):
+        lines = 0
+        for i in range(1, self.maxY):
+            zeros = 0
+            for j in range(self.maxX):
+                if self.coordArray[i][j]:
+                    zeros += 1
+            if zeros == 0:
+                lines += 1
+        return lines
