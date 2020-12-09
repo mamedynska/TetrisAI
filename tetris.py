@@ -164,14 +164,15 @@ class Tetris:
 
     #TODO
     def get_bumpiness_and_height(self):
-         # height : '''Sum and maximum height of the board'''
+        # height : '''Sum and maximum height of the board'''
         totalHeight = 0
         totalBumpiness = 0
         heights = []
         for x in range(self.board.maxX):
             y = 0
-            while self.board.coordArray[y][x] == 0 and y < self.board.maxY:
-                y += 1
+            while y < self.board.maxY:
+                if self.board.coordArray[y][x] == 0:
+                    y += 1
             heights.append(y)
             totalHeight += self.board.maxY - y
 
@@ -192,7 +193,6 @@ class Tetris:
             self.board.newBlock.reset()
         return states
 
-    #TODO méthode qui reset le plateau du tetris
     def reset(self):
         self.board = Grid(10,15)
         return self.get_states()
