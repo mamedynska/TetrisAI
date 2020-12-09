@@ -197,9 +197,6 @@ class Tetris:
 #TODO une fonction qui permet de passer une étape du jeu (je ne comprends pas trop cette fonction)
     # def get_next_states(self):
 
-
-
-
         
         # board = np.array(board)
         # mask = board != 0
