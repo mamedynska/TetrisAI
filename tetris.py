@@ -222,3 +222,26 @@ class Tetris:
     
         if canFall is not None and not canFall:
             self.board.endOfGrid()
+
+
+    def step(self, action):
+        x, rotations = action
+        for _ in range(rotations):
+            self.board.rotateBlock()
+
+        self.board.newBlock.coordinates.x = x            
+
+        while self.board.fallBlock():
+            pass
+
+        self.board.endOfGrid()
+
+        if not self.board.isGameOver:
+            self.board.spawnNewBlock()
+        else:
+            self.board.score -= 2
+
+        return self.board.score, self.board.isGameOver
+
+
+        
