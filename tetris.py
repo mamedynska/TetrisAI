@@ -219,6 +219,7 @@ class Tetris:
 
                 if event.key == pygame.K_SPACE:
                     self.board.fallBlockUntilTheEnd()
+                    canFall = False
     
         if canFall is not None and not canFall:
             self.board.endOfGrid()
