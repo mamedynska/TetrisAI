@@ -177,7 +177,6 @@ def train(opt):
         if len(replay_memory) < opt.replay_memory_size / 10:
             continue
         
-        # TODO : 
         epoch += 1
         # On pioche aléatoirement dans replay_memory une action/état
         batch = sample(replay_memory, min(len(replay_memory), opt.batch_size))
